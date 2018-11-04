@@ -10,8 +10,8 @@
     </div>
 
     <div class="navButton">
-      <button class="btn draw">文本翻译</button>
-      <button class="btn center">语音翻译</button>
+      <div class="btn draw">文本翻译</div>
+      <div class="btn center">语音翻译</div>
     </div>
   </div>
 </template>
@@ -83,7 +83,7 @@ export default {
   align-self: center;
 }
 .nickName{
-  margin-bottom: 60rpx;
+  margin: 30rpx 0 100rpx 0;
   color: #666;
 }
 .user_avatar {
@@ -132,6 +132,7 @@ export default {
   font-size: inherit;
   font-weight: 700;
   margin: 1em;
+  padding: 30rpx 60rpx;
   text-align: center;
   text-transform: capitalize;
   position: relative;
@@ -207,8 +208,8 @@ export default {
 .center:hover::before, .center:hover::after {
   -webkit-transform: scale3d(1, 1, 1);
           transform: scale3d(1, 1, 1);
-  -webkit-transition: -webkit-transform 0.5s;
-          transition: transform 0.5s;
+  -webkit-transition: -webkit-transform 0.8s;
+          transition: transform 0.8s;
 }
 
 </style>
