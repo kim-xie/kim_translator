@@ -1,0 +1,14 @@
+{
+  "pages": [
+    "pages/index/main",
+    "pages/logs/main"
+  ],
+  "window": {
+    "backgroundTextStyle": "light",
+    "navigationBarBackgroundColor": "#fff",
+    "navigationBarTitleText": "Kim翻译官",
+    "navigationBarTextStyle": "black"
+  },
+  "component": true,
+  "debug": true
+}
