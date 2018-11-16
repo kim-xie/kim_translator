@@ -1,0 +1,12 @@
+{
+  "usingComponents": {
+    "i-avatar": "../../iview/avatar/index",
+    "i-button": "../../iview/button/index"
+  },
+  "window": {
+    "backgroundTextStyle": "light",
+    "navigationBarBackgroundColor": "#fff",
+    "navigationBarTitleText": "语音翻译",
+    "navigationBarTextStyle": "black"
+  }
+}

@@ -10,8 +10,8 @@
     </div>
 
     <div class="navButton">
-      <div class="btn draw">文本翻译</div>
-      <div class="btn center">语音翻译</div>
+      <div class="btn draw" @tap="transition('text')">文本翻译</div>
+      <div class="btn center" @tap="transition('voice')">语音翻译</div>
     </div>
   </div>
 </template>
@@ -64,6 +64,12 @@ export default {
         this.$store.dispatch("setUserInfo",res.data.subjects[0])
       }).catch((err) => {
         console.log(err)
+      })
+    },
+    transition(mark){
+      console.log(mark)
+      wx.navigateTo({
+        url: '/pages/'+mark+'/main'
       })
     }
   },

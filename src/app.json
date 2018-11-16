@@ -1,7 +1,8 @@
 {
   "pages": [
     "pages/index/main",
-    "pages/logs/main"
+    "pages/text/main",
+    "pages/voice/main"
   ],
   "window": {
     "backgroundTextStyle": "light",
