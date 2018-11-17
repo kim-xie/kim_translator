@@ -27,7 +27,7 @@
     <div class="content">
       <div class="content_wrap">
         <div class="source_content">
-          <textarea class="textarea" placeholder="请输入需要翻译的文本内容..."/>
+          <textarea class="textarea" @blur="textareaBlur($event)" placeholder="请输入需要翻译的文本内容..."/>
         </div>
         <div class="line"></div>
         <div class="dist_content">
@@ -35,6 +35,8 @@
         </div>
       </div>
     </div>
+
+    <button type="primary" @tap="audioPlay">播放</button>
 
   </div>
 </template>
@@ -44,13 +46,13 @@ export default {
   data () {
     return {
       langs: [
-        {value:'auto', label:'自动'},
         {value:'zh', label:'中文'},
         {value:'en', label:'英文'},
         {value:'jp', label:'日语'}],
       source_index: 0,
-      dist_index: 2,
-      text: ''
+      dist_index: 1,
+      text: '',
+      audioSrc: ''
     }
   },
   beforeMount(){
@@ -62,16 +64,25 @@ export default {
   methods: {
     // 失去焦点翻译
     textareaBlur(e) {
-      console.log(e.detail.value)
+      const text_val = e.mp.detail.value
+      if(text_val){
+        let params = {
+          'from': this.langs[this.source_index].value,
+          'to': this.langs[this.dist_index].value,
+          'text': text_val,
+          'fileName': 'src/temp/tts.mp3'
+        }
+        this.$fly.post('http://localhost:8888/translation', params).then((res) => {
+          console.log(res)
+          this.text = res.data.dst
+          this.audioSrc = res.data.fileName
+        }).catch((err) => {
+          console.log(err)
+        })
+      }
     },
     // 选择语言
     bindPickerChange(lang,data) {
-      console.log(lang)
-      console.log(data)
-      // console.log('picker发送选择改变，携带值为', e.detail.value)
-      // this.setData({
-      //   index: e.detail.value
-      // })
       let langIndex = lang+"_index"
       this[langIndex] = data.mp.detail.value
     },
@@ -80,6 +91,12 @@ export default {
       const temp = this.source_index
       this.source_index = this.dist_index
       this.dist_index = temp
+    },
+    // 播放语音
+    audioPlay() {
+      wx.playBackgroundAudio({
+        dataUrl: this.audioSrc
+      })
     }
   }
 }
