@@ -1,6 +1,6 @@
 <template>
   <div class="text">
-    <div class="lang">
+    <div class="lang animated pulse">
       <div class="item source">
         <picker @change="bindPickerChange('source', $event)" :value="langs[source_index].value" range-key="label" :range="langs">
           <view class="picker">
@@ -20,82 +20,154 @@
       </div>
     </div>
 
-    <div class="time">
-      2018/11/16 12:00:00
-    </div>
+    <div class="time animated fadeIn"> {{nowTime}} </div>
 
-    <div class="content">
+    <div class="content animated bounce">
       <div class="content_wrap">
         <div class="source_content">
-          <textarea class="textarea" @blur="textareaBlur($event)" placeholder="请输入需要翻译的文本内容..."/>
+          <textarea class="textarea" v-model="source_text" maxlength="140" @input="getTextLength($event)" @blur="textareaBlur($event)" @confirm="textareaConfirm($event)" placeholder="请输入需要翻译的文本内容..."/>
+          <p class="tip">您还可以输入 <span class="textLength">{{textLength}}</span>/140 个字符 <i class="iconfont icon-Delete" @tap="clearTextArea"></i> </p>
         </div>
         <div class="line"></div>
         <div class="dist_content">
-          <p class="content_text">{{text}}</p>
+          <p class="content_text">{{dist_text}}</p>
+          <p v-if="dist_text" class="content_play"><i :class="playIcon" @tap="audioPlay"></i></p>
         </div>
       </div>
     </div>
-
-    <button type="primary" @tap="audioPlay">播放</button>
 
   </div>
 </template>
 
 <script>
+import {formatTime} from '@/utils/index.js'
 export default {
   data () {
     return {
       langs: [
         {value:'zh', label:'中文'},
         {value:'en', label:'英文'},
-        {value:'jp', label:'日语'}],
+        {value:'yue', label:'粤语'},
+        {value:'wyw', label:'文言文'},
+        {value:'jp', label:'日语'},
+        {value:'kor', label:'韩语'},
+        {value:'fra', label:'法语'},
+        {value:'th', label:'泰语'},
+        {value:'ru', label:'俄语'}
+      ],
       source_index: 0,
       dist_index: 1,
-      text: '',
-      audioSrc: ''
+      source_text: '',
+      dist_text: '',
+      audioSrc: '',
+      textLength: 0,
+      playIcon: 'iconfont icon-audio-low',
+      nowTime: ''
     }
   },
   beforeMount(){
-    
+    this.getTime()
   },
-  computed: {
-    
+  watch: {
+    //this.getTime()
   },
   methods: {
+    // 获取当前时间
+    getTime(){
+      const _this = this
+      let timer = setInterval(() => {
+        _this.nowTime = formatTime(new Date())
+      }, 1000)
+    },
+    // 监听输入框事件
+    getTextLength(ev){
+      this.textLength = ev.mp.detail.value.length
+    },
+    // 清除textarea
+    clearTextArea(){
+      const _this = this
+      this.textareaBlur('', function(){
+        _this.textLength = 0
+        _this.dist_text = ''
+        _this.source_text = ''
+      })
+    },
     // 失去焦点翻译
-    textareaBlur(e) {
-      const text_val = e.mp.detail.value
+    textareaBlur(e, callback) {
+      let text_val = ''
+      if(e){
+        text_val = e.mp.detail.value
+      }else{
+        text_val = this.source_text
+      }
       if(text_val){
         let params = {
           'from': this.langs[this.source_index].value,
           'to': this.langs[this.dist_index].value,
-          'text': text_val,
-          'fileName': 'src/temp/tts.mp3'
+          'text': text_val
         }
-        this.$fly.post('http://localhost:8888/translation', params).then((res) => {
+        this.$fly.post('http://www.kimshare.club:8888/translation', params).then((res) => {
           console.log(res)
-          this.text = res.data.dst
-          this.audioSrc = res.data.fileName
+          this.dist_text = res.data.dst
+          let filename = res.data.fileName
+          this.audioSrc = 'http://www.kimshare.club' + filename.split('/nginx')[1]
+          if(callback){
+            callback()
+          }
         }).catch((err) => {
           console.log(err)
         })
       }
     },
+    // 完成
+    textareaConfirm(e){
+      console.log(e)
+      this.textareaBlur(e)
+    },
     // 选择语言
-    bindPickerChange(lang,data) {
+    bindPickerChange(lang, data) {
       let langIndex = lang+"_index"
       this[langIndex] = data.mp.detail.value
+      if(lang === 'dist'){
+        this.dist_text = ''
+        this.audioSrc = ''
+        this.textareaBlur()
+      }else{
+        this.clearTextArea()
+      }
     },
     // 语言切换
     langReserve(){
       const temp = this.source_index
       this.source_index = this.dist_index
       this.dist_index = temp
+      this.clearTextArea()
     },
     // 播放语音
     audioPlay() {
+      const _this = this
+      let timer = null
+      let timer2 = null
+      // 播放
       wx.playBackgroundAudio({
         dataUrl: this.audioSrc
+      })
+      // 监听播放
+      wx.onBackgroundAudioPlay(function () {
+        // 当wx.playBackgroundAudio()执行时触发
+        timer = setInterval(() => {
+          _this.playIcon = 'iconfont icon-audiomid'
+        }, 200)
+        timer2 = setInterval(() => {
+          _this.playIcon = 'iconfont icon-audio-high'
+        }, 300)
+      })
+      // 播放结束
+      wx.onBackgroundAudioStop(function () {
+        // 当音乐自行播放结束时触发
+        clearInterval(timer)
+        clearInterval(timer2)
+        _this.playIcon = 'iconfont icon-audio-low'
       })
     }
   }
@@ -136,6 +208,22 @@ export default {
     word-break: break-all;
 　　word-wrap: break-word;
   }
+  .tip{
+    text-align: right;
+    font-size: 28rpx;
+    color: #ccc
+  }
+  .tip i{
+    display: inline-block;
+    font-size: 34rpx;
+    color: #f0d9da
+  }
+  .tip i:hover{
+    transform: scale(1.2);
+  }
+  .textLength{
+    color: #f0d9da;
+  }
   .line{
     width: 100%;
     height: 2rpx;
@@ -169,6 +257,17 @@ export default {
     height: auto;
     word-break: break-all; /*支持IE，chrome，FF不支持*/
 　　word-wrap: break-word; /*支持IE，chrome，FF*/
-
+  }
+  .dist_content .content_play{
+    margin-top: 30rpx;
+  }
+  .dist_content .content_play i.icon-audio-low{
+    color: #ccc
+  }
+  .dist_content .content_play i.icon-audiomid{
+    color: #f0d9da
+  }
+  .dist_content .content_play i.icon-audio-high{
+    color: #f0d9da
   }
 </style>

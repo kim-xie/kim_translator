@@ -39,7 +39,9 @@ export default {
       // 允许授权
       if(data.mp.detail.rawData){
         // 获取用户信息
-        this.handleGetUserInfo()
+        console.log(data.mp)
+        this.userInfo = data.mp.detail.rawData
+        this.isAuthed = true
       }
     },
     handleGetUserInfo () {
