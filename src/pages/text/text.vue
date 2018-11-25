@@ -48,7 +48,6 @@ export default {
         {value:'zh', label:'中文'},
         {value:'en', label:'英文'},
         {value:'yue', label:'粤语'},
-        {value:'wyw', label:'文言文'},
         {value:'jp', label:'日语'},
         {value:'kor', label:'韩语'},
         {value:'fra', label:'法语'},
@@ -106,11 +105,12 @@ export default {
           'to': this.langs[this.dist_index].value,
           'text': text_val
         }
-        this.$fly.post('http://www.kimshare.club:8888/translation', params).then((res) => {
+        this.$fly.post('https://www.kimshare.club:18081/text_translation', params).then((res) => {
           console.log(res)
+          let now = new Date().getTime()
           this.dist_text = res.data.dst
           let filename = res.data.fileName
-          this.audioSrc = 'http://www.kimshare.club' + filename.split('/nginx')[1]
+          this.audioSrc = 'https://www.kimshare.club' + filename.split('/nginx')[1]+'?'+now
           if(callback){
             callback()
           }
@@ -157,10 +157,10 @@ export default {
         // 当wx.playBackgroundAudio()执行时触发
         timer = setInterval(() => {
           _this.playIcon = 'iconfont icon-audiomid'
-        }, 200)
+        }, 100)
         timer2 = setInterval(() => {
           _this.playIcon = 'iconfont icon-audio-high'
-        }, 300)
+        }, 200)
       })
       // 播放结束
       wx.onBackgroundAudioStop(function () {

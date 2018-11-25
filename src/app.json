@@ -7,7 +7,7 @@
   "window": {
     "backgroundTextStyle": "light",
     "navigationBarBackgroundColor": "#fff",
-    "navigationBarTitleText": "Kim翻译官",
+    "navigationBarTitleText": "Kim翻译助手",
     "navigationBarTextStyle": "black"
   },
   "component": true,

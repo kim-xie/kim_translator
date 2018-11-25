@@ -6,12 +6,12 @@
     </div>
 
     <div class="nickName">
-      <p class="hover-underline-animation animated swing">欢迎 <span>{{userInfo.nickName}}</span> 来到Kim翻译官</p>
+      <p class="hover-underline-animation animated swing">欢迎 <span>{{userInfo.nickName}}</span> 来到Kim翻译助手</p>
     </div>
 
     <div class="navButton">
       <div class="btn draw" @tap="transition('text')">文本翻译</div>
-      <div class="btn center" @tap="transition('voice')">语音翻译</div>
+      <!-- <div class="btn center" @tap="transition('voice')">语音翻译</div> -->
     </div>
   </div>
 </template>
