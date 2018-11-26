@@ -116,6 +116,17 @@ export default {
           }
         }).catch((err) => {
           console.log(err)
+          wx.showModal({
+            title: '温馨提示',
+            content: '网络连接中断，请稍后重试!',
+            success (res) {
+              if (res.confirm) {
+                console.log('用户点击确定')
+              } else if (res.cancel) {
+                console.log('用户点击取消')
+              }
+            }
+          })
         })
       }
     },
