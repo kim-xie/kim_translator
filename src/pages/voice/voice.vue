@@ -114,8 +114,7 @@ export default {
     this.translateDatas = wx.getStorageSync('translates') || []
   },
   computed: {
-    //...mapState(['userInfo']),
-    //...mapGetters(['userInfo'])
+    ...mapGetters(['userInfo'])
   },
   methods: {
     // 选择语言
@@ -134,7 +133,7 @@ export default {
             wx.removeStorageSync('translates')
             that.translateDatas = wx.getStorageSync('translates') || []
           } else if (res.cancel) {
-            console.log('用户点击取消')
+            //console.log('用户点击取消')
           }
         }
       })
@@ -232,6 +231,7 @@ export default {
     translateApi(fileName){
       const that = this
       let params = {
+        'user': this.userInfo,
         'from': this.sourcelangs[this.source_index].value,
         'to': this.distlangs[this.dist_index].value,
         'fileName': fileName

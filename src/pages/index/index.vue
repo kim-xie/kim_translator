@@ -35,12 +35,13 @@ export default {
   },
   methods: {
     getUserInfo (data) {
-      console.log(data)
+      // console.log(data)
       // 允许授权
       if(data.mp.detail.rawData){
         // 获取用户信息
-        console.log(data.mp)
+        // console.log(data.mp)
         this.userInfo = JSON.parse(data.mp.detail.rawData)
+        this.$store.dispatch('setUserInfo',this.userInfo)
         this.isAuthed = true
       }
     },
@@ -49,15 +50,16 @@ export default {
       wx.getUserInfo({
         success: (res) => {
           this.userInfo = res.userInfo
+          this.$store.dispatch('setUserInfo',this.userInfo)
           this.isAuthed = true
         },
         fail: (err) => {
-          console.log('用户获取失败')
+          //console.log('用户获取失败')
         }
       })
     },
     transition(mark){
-      console.log(mark)
+      //console.log(mark)
       if(this.isAuthed){
         wx.navigateTo({
           url: '/pages/'+mark+'/main'
@@ -68,9 +70,9 @@ export default {
           content: '您还没有授权将无法使用该功能，请点击授权',
           success (res) {
             if (res.confirm) {
-              console.log('用户点击确定')
+              //console.log('用户点击确定')
             } else if (res.cancel) {
-              console.log('用户点击取消')
+              //console.log('用户点击取消')
             }
           }
         })

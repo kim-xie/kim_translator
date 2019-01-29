@@ -41,6 +41,7 @@
 
 <script>
 import {formatTime} from '@/utils/index.js'
+import {mapState, mapGetters, mapMutations, mapActions} from 'vuex'
 export default {
   data () {
     return {
@@ -69,6 +70,9 @@ export default {
   },
   watch: {
     //this.getTime()
+  },
+  computed: {
+    ...mapGetters(['userInfo'])
   },
   methods: {
     // 获取当前时间
@@ -101,12 +105,13 @@ export default {
       }
       if(text_val){
         let params = {
+          'user': this.userInfo,
           'from': this.langs[this.source_index].value,
           'to': this.langs[this.dist_index].value,
           'text': text_val
         }
         this.$fly.post('https://www.kimshare.club:18081/text_translation', params).then((res) => {
-          console.log(res)
+          //console.log(res)
           let now = new Date().getTime()
           this.dist_text = res.data.dst
           let filename = res.data.fileName
@@ -115,15 +120,15 @@ export default {
             callback()
           }
         }).catch((err) => {
-          console.log(err)
+          //console.log(err)
           wx.showModal({
             title: '温馨提示',
             content: '网络连接中断，请稍后重试!',
             success (res) {
               if (res.confirm) {
-                console.log('用户点击确定')
+                //console.log('用户点击确定')
               } else if (res.cancel) {
-                console.log('用户点击取消')
+                //console.log('用户点击取消')
               }
             }
           })
@@ -132,7 +137,7 @@ export default {
     },
     // 完成
     textareaConfirm(e){
-      console.log(e)
+      //console.log(e)
       this.textareaBlur(e)
     },
     // 选择语言
