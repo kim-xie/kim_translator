@@ -2,16 +2,16 @@
   <div class="user">
     <div class="avatar">
       <img v-if="isAuthed" class="user_avatar animated bounce" :src="userInfo.avatarUrl" alt="">
-      <button v-else class="user_avatar animated bounce" open-type="getUserInfo" @getuserinfo="getUserInfo">获取用户信息</button>
+      <button v-else class="user_avatar animated bounce" open-type="getUserInfo" @getuserinfo="getUserInfo">点击授权</button>
     </div>
 
     <div class="nickName">
-      <p class="hover-underline-animation animated swing">欢迎 <span>{{userInfo.nickName}}</span> 来到Kim翻译助手</p>
+      <p class="hover-underline-animation animated swing" v-if="userInfo.nickName">欢迎 <span>{{userInfo.nickName}}</span> 来到Kim翻译助手</p>
     </div>
 
     <div class="navButton">
       <div class="btn draw" @tap="transition('text')">文本翻译</div>
-      <!-- <div class="btn center" @tap="transition('voice')">语音翻译</div> -->
+      <div class="btn center" @tap="transition('voice')">语音翻译</div>
     </div>
   </div>
 </template>
@@ -40,7 +40,7 @@ export default {
       if(data.mp.detail.rawData){
         // 获取用户信息
         console.log(data.mp)
-        this.userInfo = data.mp.detail.rawData
+        this.userInfo = JSON.parse(data.mp.detail.rawData)
         this.isAuthed = true
       }
     },
@@ -56,26 +56,27 @@ export default {
         }
       })
     },
-    handleClick(){
-      this.$fly.get('http://t.yushu.im/v2/movie/top250',{'start': 0, 'count': 25},{
-        header:{
-          'Content-Type':"application/json"
-        }
-      }).then((res) => {
-        console.log(res.data.subjects[0])
-        this.$store.dispatch("setUserInfo",res.data.subjects[0])
-      }).catch((err) => {
-        console.log(err)
-      })
-    },
     transition(mark){
       console.log(mark)
-      wx.navigateTo({
-        url: '/pages/'+mark+'/main'
-      })
+      if(this.isAuthed){
+        wx.navigateTo({
+          url: '/pages/'+mark+'/main'
+        })
+      }else{
+        wx.showModal({
+          title: '温馨提示',
+          content: '您还没有授权将无法使用该功能，请点击授权',
+          success (res) {
+            if (res.confirm) {
+              console.log('用户点击确定')
+            } else if (res.cancel) {
+              console.log('用户点击取消')
+            }
+          }
+        })
+      }
     }
-  },
-
+  }
 }
 </script>
 

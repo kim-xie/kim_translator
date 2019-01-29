@@ -227,7 +227,7 @@ export default {
   .tip i{
     display: inline-block;
     font-size: 34rpx;
-    color: #f0d9da
+    color: #f35860
   }
   .tip i:hover{
     transform: scale(1.2);
@@ -237,11 +237,11 @@ export default {
   }
   .line{
     width: 100%;
-    height: 2rpx;
-    background: #ccc;
+    height: 1px;
+    background: #f1f1f1;
     margin: 10rpx auto;
     margin-bottom: 20rpx;
-    box-shadow: 0 0 10px #ccc;
+    box-shadow: 0 0 10px #f1f1f1;
   }
   .time{
     width: 80%;
@@ -255,7 +255,7 @@ export default {
   .content{
     width: 80%;
     padding: 30rpx;
-    background: #ecf2f9;
+    /* background: #ecf2f9; */
     border-radius: 20rpx;
     box-shadow: 0 1px 10px #ccc;
   }

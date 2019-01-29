@@ -18,7 +18,19 @@ export function formatTime (date) {
   return `${t1} ${t2}`
 }
 
+export function recordTime(date) {
+
+  var month = date.getMonth() + 1
+  var day = date.getDate()
+
+  var hour = date.getHours()
+  var minute = date.getMinutes()
+
+  return [month, day].map(formatNumber).join('/') + ' ' + [hour, minute].map(formatNumber).join(':')
+}
+
 export default {
   formatNumber,
-  formatTime
+  formatTime,
+  recordTime
 }
